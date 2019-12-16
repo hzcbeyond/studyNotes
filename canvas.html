@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #canvas{
+             border: 1px solid #9A9A9A;
+        }
+        #myimg{ 
+            width: 200px;
+            height: 100px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+         <!-- <video controls='controls' id="video" autoplay='autoplay' loop='loop'>
+            <source src="./audio/mov_bbb.mp4" type="video/mp4">
+         </video> -->
+         <canvas id="canvas" width="320" height="176"></canvas>
+    </div>
+</body>
+<script>
+    // 要加载canvas的图片需要 img.onload();
+    //  naturalWidth  和  naturalHeight     图片的真实高度和宽度
+    //  fillRect 方法拥有参数 (0,0,150,75)。 x轴 y轴 宽 高
+    const myCanvas = document.getElementById('canvas');
+    const video = document.getElementById('video')
+    let cxt = myCanvas.getContext('2d');
+    var i = null;
+
+    // ---- 基础画线 ---- 
+    // cxt.fillStyle = 'red';
+    // cxt.fillRect(0,0,200,100);
+    // cxt.moveTo(10,10);
+    // cxt.lineTo(150,50);
+    // cxt.lineTo(10,50);
+    // cxt.stroke();
+    // ---- 基础画线 ----
+    // ---- 圆形 ----
+    // cxt.fillStyle="#FF0000";
+    // cxt.beginPath();
+    // cxt.arc(70,18,15,0,Math.PI*2,true);
+    // cxt.closePath();
+    // cxt.fill();
+    // ---- 圆形 ----
+    // ---- 渐变色 ----
+    // let grd=cxt.createLinearGradient(0,0,175,50);
+    // grd.addColorStop(0,"#FF0000");
+    // grd.addColorStop(1,"#00FF00");
+    // cxt.fillStyle=grd;
+    // cxt.fillRect(0,0,175,50);
+    // ---- 渐变色 ----
+
+    // ---- 图片绘制到画布 ----
+    let image = new Image(200,100); // Using optional size for image
+    image.onload = drawImageActualSize; // Draw when image has loaded
+    image.src = 'https://mdn.mozillademos.org/files/5397/rhino.jpg';
+    function drawImageActualSize() {
+    // 在canvas元素的CSS像素中使用图像的固有大小
+    myCanvas.width = this.naturalWidth;
+    myCanvas.height = this.naturalHeight;
+    // 将图像绘制为300x227，忽略自定义大小为60x45
+    cxt.drawImage(this, 0, 0);
+    //   图片自定义大小
+    // cxt.drawImage(this, 0, 0, this.width, this.height);
+    }
+    // ---- 图片绘制到画布 ----
+    // canvas 另外一种方法 先定义一张图片在绘制到 画布上
+    // var img=document.getElementById("tulip");
+    // ctx.drawImage(img,10,10,240,160);
+
+    //---- 将视屏绘制到canvas 里面 ----
+    // video.addEventListener('play',function() {
+    //         i = window.setInterval(()=>{
+    //         cxt.drawImage(video,0,0,320,176)
+    //       },20)
+    // })
+    // video.addEventListener('pause',function(){
+    //     window.clearInterval(i);
+    // },false)
+    // video.addEventListener('ended',function(){
+    //     window.clearInterval(i);
+    // },false);
+    //---- 将视屏绘制到canvas 里面 ----
+</script>
+</html>

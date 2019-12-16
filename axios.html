@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div>
+         <button onclick="handleClick()">
+             点击请求
+         </button>
+         <button onclick="handleCancel()">
+             中断请求
+         </button>
+    </div>
+</body>
+  <script>
+       var CancelToken = axios.CancelToken;
+       var source = CancelToken.source();
+      function handleClick(){
+            axios.get('http://jsonplaceholder.typicode.com/comments', {params:{order_id: 1165803831129694209},cancelToken: source.token}).then(res=>{
+                  
+            })
+      }
+      function handleCancel(){
+           source.cancel();
+      }
+
+        // function handleClick () {
+        //     let CancelToken = axios.CancelToken
+        //     let self = this
+        //     // let url = 'https://testnet.piexgo.co/v1/trade/tradeDetail';
+        //     // let url = 'http://jsonplaceholder.typicode.com/comments';
+        //     let url = 'https://testnet.piexgo.co/v1/data/depth'
+        //             axios.get(url, {
+        //       params:{symbol: 'BTC_USDT'}, 
+        //       cancelToken: new CancelToken(function executor(c) {
+        //         self.cancel = c
+        //         console.log(c)
+        //         // 这个参数 c 就是CancelToken构造函数里面自带的取消请求的函数，这里把该函数当参数用
+        //       })
+        //     }).then(res => {
+        //       this.items = res.data
+        //     }).catch(err => {
+        //       console.log(err)
+        //     })
+    
+        //     //手速够快就不用写这个定时器了，点击取消获取就可以看到效果了
+        //     // setTimeout(function () {
+        //     //   //只要我们去调用了这个cancel()方法，没有完成请求的接口便会停止请求
+        //     //   self.cancel()
+        //     // }, 100)
+        //   },
+          //cancelGetMsg 方法跟上面的setTimeout函数是一样的效果，因为手速不够快，哦不，是因为网速太快，导致我来不及点取消获取按钮，数据就获取成功了
+          // function handleCancel () {
+          //   // 在这里去判断你的id 1 2 3，你默认是展示的tab1，点击的时候不管你上一个请求有没有执行完都去调用这个cancel()，
+          //   this.cancel()
+          // }
+  </script>
+</html>

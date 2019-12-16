@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="contain">
+        <!-- controls 显示按钮    autoplay 加载完自动播放   loop 重复播放-->
+        <video width="320" height="240" controls="controls" autoplay='autoplay' loop='loop' id="myVideo">
+            <source src="./audio/mov_bbb.mp4" type="video/mp4">
+            你的浏览器不支持
+          </video>
+          <button onclick="handleClickPlay()">
+                播放
+          </button>
+          <button onclick="handleClickPause()">
+                暂停
+          </button>
+          <button onclick="handleClickWidth()">
+               宽度调整
+          </button>
+          <button onclick="handleClickLoad()">
+               重新加载视屏 
+          </button>
+          <audio controls="controls">
+                <source src="./audio/hello.ogg" type="audio/ogg">
+                <source src="./audio/hello.mp3" type="audio/mpeg">
+              你的浏览器不支持
+        </audio>
+    </div>
+</body>
+<script>
+    const video = document.getElementById('myVideo');
+   function handleClickPlay(){
+         video.play();
+   }
+   function handleClickPause(){
+        video.pause();
+   }
+   function handleClickWidth(){
+    //    video.width = Math.floor(Math.random()*1000+1);
+       video.width = Math.random()*(1000-990) + 990;  
+       console.log(video.width)
+   }
+   function handleClickLoad(){
+        video.src='./audio/movie.mp4';
+        video.load();
+   }
+//    canPlayType() 检测是否能播放视屏或者音频
+</script>
+</html>

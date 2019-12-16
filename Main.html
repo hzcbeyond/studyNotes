@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .wrap {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contain {
+        padding: 24px;
+    }
+</style>
+
+<body>
+    <div class="wrap">
+        <div class="contain">
+            <div>
+                <p>clientHeight (可视化高度 包括padding的高度)</p>
+                <p>clientHeight：包括padding但不包括border、水平滚动条、margin的元素的高度。对于inline的元素这个属性一直是0，单位px，只读元素。</p>
+                <img src="./image/client.jpg" alt="">
+            </div>
+            <div>
+                <p>scrollHeight （显示出父级高度完整高度 ---> 文档的高度） 本身的高度加上隐藏的高度</p>
+                <p> scrollHeight: 因为子元素比父元素高，父元素不想被子元素撑的一样高就显示出了滚动条，在滚动的过程中本元素有部分被隐藏了，
+                    scrollHeight代表包括当前不可见部分的元素的高度。而可见部分的高度其实就是clientHeight，也就是scrollHeight>=clientHeight恒成立。</p>
+                <img src="./image/scrollheight.jpg" alt="">
+            </div>
+            <div>
+                <p>scrollTop：当前滚动条位置距离顶部的高度</p>
+                <p>scrollTop: 代表在有滚动条时，滚动条向下滚动的距离也就是元素顶部被遮住部分的高度。在没有滚动条时scrollTop==0恒成立。单位px，可读可设置。</p>
+                <img src="./image//scrollTop.jpg" alt="">
+            </div>
+            <div>
+                <p>offsetHeight：指定元素的 高度 height</p>
+                <p>offsetHeight：包括padding、border、水平滚动条，但不包括margin的元素的高度。对于inline的元素这个属性一直是0，单位px，只读元素。</p>
+                <img src="./image/offsetheight.jpg" alt="">
+            </div>
+
+            <div>
+                <p>offsetTop: 可以获得 HTML 元素距离上方或外层元素的位置</p>
+                <p>offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。</p>
+                <img src="./image/offsetTop.jpg" alt="">
+            </div>
+        </div>
+        <div class="contain">
+            <button onclick="downs()"></button>
+            <button onclick="handleIncludes('apple')">includes 点击</button>
+            <button onclick="handleSwitch('red')">Switch 点击</button>
+            <button onclick="handleGetMap('yellow')">GetMap 点击</button>
+            <button onclick="handleSetMap('yellow')">SetMap 点击</button>
+            <button onclick="handleArrFliter('yellow')">Arrar.filter 点击</button>
+            <button onclick="handleArrFilterSet()">Arrar.filter 点击</button>
+            <button onclick="handleGetBool()">是否满足条件 点击</button>
+            <button onclick="handleArrEvery()">Array.every 点击</button>
+            <button onclick="handleArrSome()">Array.some 点击</button>
+        </div>
+    </div>
+
+</body>
+<script>
+    // 下载图片
+    function downloadIamge(imgsrc, name) { //下载图片地址和图片名
+        var image = new Image();
+        // 解决跨域 Canvas 污染问题
+        image.setAttribute("crossOrigin", "anonymous");
+        image.onload = function () {
+            var canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            var context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0, image.width, image.height);
+            var url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+            var a = document.createElement("a"); // 生成一个a元素
+            var event = new MouseEvent("click"); // 创建一个单击事件
+            a.download = name || "photo"; // 设置图片名称
+            a.href = url; // 将生成的URL设置为a.href属性
+            var b = a.dispatchEvent(event); // 触发a的单击事件IE下使用fireEvent    高级浏览器下使用dispatchEvent 
+            console.log(b) // true
+        };
+        image.src = imgsrc;
+    }
+    // 下载图片
+    function downs() {
+        downloadIamge('https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=415293130,2419074865&fm=27&gp=0.jpg', '23')
+    }
+    // includes 函数应用 可以代替多重判断
+    function handleIncludes(data) {
+        if (!data) throw new Error('No fruit');
+        const Arr = ['apple', 'bannana', 'pair', 'origin'];
+        if (!Arr.includes(data)) alert(`无符合条件`);
+        if (Arr.includes(data)) alert(`我是${data}`);
+    }
+    // switch 条件判断
+    function handleSwitch(data) {
+        switch (data) {
+            case 'red':
+                return alert(['apple', 'strawberry']);
+            case 'yellow':
+                return alert(['bannana', 'pair']);
+            case 'purple':
+                return alert(['grape', 'plum']);
+            default:
+                return [];
+        }
+    }
+    // Map 定义配置表匹配对的结果
+    function handleGetMap(data) {
+        const fruitColor = {
+            red: ['apple', 'strawberry'],
+            yellow: ['banana', 'pineapple'],
+            purple: ['grape', 'plum']
+        }
+        return alert(fruitColor[data])
+    }
+    // new Map() 使用.set 设置配置表 使用 .get 获取配置表
+    function handleSetMap(data) {
+        let list = new Map()
+            .set('red', ['apple', 'strawberry'])
+            .set('yellow', ['banana', 'pineapple'])
+            .set('purple', ['grape', 'plum'])
+        return alert(list.get(data))
+    }
+    // 数组filter的使用过滤得到符合条件的结果 返回一个数组
+    function handleArrFliter(data) {
+        const fruits = [
+            { name: 'apple', color: 'red' },
+            { name: 'strawberry', color: 'red' },
+            { name: 'banana', color: 'yellow' },
+            { name: 'pineapple', color: 'yellow' },
+            { name: 'grape', color: 'purple' },
+            { name: 'plum', color: 'purple' }
+        ]
+        return alert(JSON.stringify(fruits.filter(item => item.color === data)))
+    }
+    // 数组 filter去重 去除重复元素依靠的是indexOf总是返回第一个元素的位置，
+    // 后续的重复元素位置与indexOf返回的位置不相等，因此被filter滤掉了。
+    // self.indexOf(element) 数组所在的索引位置
+    function handleArrFilterSet() {
+        let item,
+            arr = ['apple', 'strawberry', 'banana', 'pear', 'apple', 'orange', 'orange', 'strawberry']
+        item = arr.filter(function (element, index, self) {
+            // self.indexOf(element) 数组所在的索引位置相同则返回
+            return self.indexOf(element) === index;
+        })
+        alert(item.toString());
+    }
+    const fruitList = [
+        { name: 'apple', color: 'red' },
+        { name: 'banana', color: 'yellow' },
+        { name: 'grape', color: 'purple' },
+    ]
+    // for in遍历的是数组的索引（即键名），而for of遍历的是数组元素值。
+    // for of遍历的只是数组内的元素，而不包括数组的原型属性method和索引name
+    // for..of适用遍历数 / 数组对象 / 字符串 / map / set等拥有迭代器对象的集合.但是不能遍历对象,
+    //     因为没有迭代器对象.与forEach()不同的是，它可以正确响应break、continue和return语句
+    // for-of循环不支持普通对象，但如果你想迭代一个对象的属性，你可以用for - in循环（这也是它的本职工作）
+    // 或内建的Object.keys()方法：
+
+    // 类似于Array.every() 方法 检查所有的水果是否都是红色的 返回Bool值 一个不成立则返回 false
+    function handleGetBool() {
+        let isBool = true;
+        for (const item of fruitList) {
+            if (!isBool) break;
+            isBool = (item.color === 'red');
+        }
+        alert(isBool)
+    }
+    // Array.every()  检查所有的水果是否都是红色的 返回Bool值  Array.every() 一个不成立则返回 false
+    function handleArrEvery() {
+        let isBool = fruitList.every(item => item.color === 'red');
+        alert(isBool)
+    }
+    // 检查所有的水果是否有红色的 返回Bool值  Array.some() 一个成立则返回 true
+    function handleArrSome() {
+        let isBool = fruitList.some(item => item.color === 'red');
+        alert(isBool)
+    }
+    // 循环嵌套
+    let positionList = {
+        h3: { parent: 'h2', name: '副总经理(市场)' },
+        h1: { parent: 'h0', name: '公司机构' },
+        h7: { parent: 'h6', name: '副总经理(总务)' },
+        h4: { parent: 'h3', name: '销售经理' },
+        h2: { parent: 'h1', name: '总经理' },
+        h8: { parent: 'h0', name: '财务总监' },
+        h6: { parent: 'h4', name: '仓管总监' },
+        h5: { parent: 'h4', name: '销售代表' },
+        h0: { parent: '', name: 'root' },
+    }
+    let handleArrTree = function (obj) {
+        let key, res;
+        for (key in obj) {
+            let parent = obj[key].parent;
+            if (parent === "") {
+                res = obj[key];
+            } else {
+                obj[parent][key] = obj[key];
+            }
+        }
+        console.log(res)
+        return res;
+    }
+    handleArrTree(positionList);
+    let sum
+    for (let i = 1; i <= 9; i++) {
+        document.write("<br>");
+        for (let j = 1; j <= i; j++) {
+            sum = i * j;
+            document.write(i, "*", j, "=", sum, "   ");     // 使 "i" 和 "j" 能打印出来
+        }
+    }
+
+    // 对象解构
+    function getStock(){
+         return {
+            code: 'IBM',
+            price:{
+                price1: 100,
+                price2: 200 
+            }
+         }
+    }
+
+//    const {code,price} = getStock();
+  const {code: codex, price: {price2}}
+   console.log(code);
+   console(price)
+
+//  数组解构
+ var array1 = [1,2,3,4,5];
+ var [number1,number2] = array1;
+//  var [number1, , ,number2];
+//  var [number1,number2, ...other]
+//  console.log(number1,number2,other)
+
+function doSomething([list1,list2,...other]){
+     console.log(list1)
+     console.log(list2);
+     console.log(other)
+}
+doSomething(array1);
+
+// 箭头表达式
+// var sum = (args1,args2) => args1 + args2;  // 单行可以不写return;
+
+// class 类
+class Person{
+
+    // 类的构造函数 
+    // var p1 = new Person('per');
+    // constructor(name){
+    //     this.name = name;
+    //      console.log('haha')
+    // }
+    constructor(name)
+     name;
+     eat(){
+         console.log(name)
+    }
+}
+
+class Plice extends Person{
+     
+}
+var e1 = new Plice();
+e1.eat();
+
+var p1 = new Person();
+p1.name = 'meth';
+p1.eat();
+
+
+
+</script>
+
+</html>
