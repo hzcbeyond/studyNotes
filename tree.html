@@ -1,0 +1,144 @@
+<el-popover placement="bottom" title="选择要显示的列" width="200" trigger="click">
+    <el-checkbox-group v-model="value1" @change="handleChange" v-for="(item,index) in tableLabel" :key="index" >
+      <el-checkbox :label="item">{{item.label}}</el-checkbox>
+    </el-checkbox-group>
+
+    <el-button slot="reference" size="small">自定义显示列</el-button>
+  </el-popover>
+  <!-- 表格 -->
+  <el-table
+    :data="tableData"
+    border
+    row-key="id"
+    align="center"
+    highlight-current-row
+    :default-sort="{prop: 'tag', order: 'descending'}"
+  >
+    <el-table-column type="selection" width="55" align="center"></el-table-column>
+    <el-table-column type="index" width="50" align="center"></el-table-column>
+    <template v-for="(item, index) in tableLabel">
+      <el-table-column
+        sortable
+        align="center"
+        :key="index"
+        :label="item.label"
+        :prop="item.prop"
+        v-if="value1.includes(item)"
+      ></el-table-column>
+    </template>
+  </el-table>
+
+
+// 切换树
+onCheckChange(item,check,list) {
+let refTree = this.$refs.departmentDataTree.$refs.tree
+if(!check){
+  this.departmentData.forEach(l => {
+      if(l.parentId) {
+          refTree.getNode(item.id).parent.data.disabled = true
+      }else {
+          refTree.getNode(item.id).parent.data.disabled = false
+      }
+  })
+  this.departmentData = this.departmentData.filter(v=>v.id != item.id)
+  let isBool = this.departmentData.some(item => item.parentId)
+  if(!this.departmentData.length || !isBool) {
+     refTree.getNode(item.id).parent.data.disabled = false
+  }
+  return this.departmentData
+}else{
+    refTree.getNode(item.id).parent.data.disabled = true
+    refTree.setChecked(refTree.getNode(item.id).parent.data.id,false,false)
+}
+if(!this.departmentData.find(v=>v.id==item.id)){
+  this.departmentData.push({
+    ...item,
+    type: DEPARTMENT_TYPE
+  })
+}        
+
+},
+
+if(!this.departmentData.length || !isBool) {
+     refTree.getNode(item.id).parent.data.disabled = false
+  }else {
+     refTree.getNode(item.id).parent.data.disabled = true
+  }
+
+
+清除树组件勾选，
+// 递归函数
+handleTest(list) {
+let dataTree = this.$refs.departmentDataTree.$refs.tree
+list.forEach(v => {
+     if(v.childNodes) {
+        this.handleTest(v.childNodes)
+        dataTree.setChecked(v.data.id,false,false)
+     }
+  })
+},
+// 切换树
+onCheckChange(item,check) {
+this.nodeID = item.id
+this.nodePath = item.idPath.match(/([^\/]+)/g)
+this.nodePath.pop();
+let dataTree = this.$refs.departmentDataTree.$refs.tree
+let list = dataTree.getNode(item.id).store.root.childNodes
+if(!check){
+     // 如果取消选中，检查父节点是否该取消选中（可能仍有子节点为选中状态）
+  return this.departmentData = this.departmentData.filter(v=>v.id != item.id)
+}else {
+    if(dataTree.getNode(item.id).childNodes && dataTree.getNode(item.id).checked) {
+        this.handleTest(dataTree.getNode(item.id).childNodes)
+    }
+    this.nodePath.forEach(item => {
+      dataTree.setChecked(item,false,false)
+    })
+}
+
+if(!this.departmentData.find(v=>v.id==item.id)){
+  this.departmentData.push({
+    ...item,
+    type: DEPARTMENT_TYPE
+  })
+}        
+
+},
+
+禁用的递归函数但是会出现BUG
+// 递归函数
+handleTest(list, status) {
+list.forEach(v => {
+     if(v.childNodes) {
+        this.handleTest(v.childNodes, status)
+        if(this.nodePath.includes(v.data.id) && status) {
+           v.data.disabled = true
+        }else {
+           v.data.disabled = false
+        }
+     }
+  })
+},
+// 切换树
+onCheckChange(item,check) {
+this.nodeID = item.id
+this.nodePath = item.idPath.match(/([^\/]+)/g)
+this.nodePath.pop();
+let dataTree = this.$refs.departmentDataTree.$refs.tree
+let list = dataTree.getNode(item.id).store.root.childNodes
+if(!check){
+     // 如果取消选中，检查父节点是否该取消选中（可能仍有子节点为选中状态）
+  this.handleTest(list, false)
+  return this.departmentData = this.departmentData.filter(v=>v.id != item.id)
+}else {
+    this.handleTest(list, true)
+}
+
+if(!this.departmentData.find(v=>v.id==item.id)){
+  this.departmentData.push({
+    ...item,
+    type: DEPARTMENT_TYPE
+  })
+}        
+
+},
